@@ -1,0 +1,23 @@
+---
+- name: Ensure firewalld is installed and running
+  package:
+    name: firewalld
+    state: present
+
+- name: Start and enable firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Set default zone to drop
+  command: firewall-cmd --set-default-zone=drop
+  changed_when: true
+
+- name: Allow required services
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  loop: "{{ firewall_allowed_services }}"

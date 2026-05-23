@@ -1,0 +1,25 @@
+---
+- name: Configure SSH server
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: yes
+  loop:
+    - { regexp: '^#?PermitRootLogin',        line: "PermitRootLogin {{ ssh_permit_root_login }}" }
+    - { regexp: '^#?MaxAuthTries',           line: "MaxAuthTries {{ ssh_max_auth_tries }}" }
+    - { regexp: '^#?PasswordAuthentication', line: "PasswordAuthentication {{ ssh_password_authentication }}" }
+    - { regexp: '^#?ClientAliveInterval',    line: "ClientAliveInterval {{ ssh_client_alive_interval }}" }
+    - { regexp: '^#?ClientAliveCountMax',    line: "ClientAliveCountMax {{ ssh_client_alive_count_max }}" }
+    - { regexp: '^#?Protocol',               line: "Protocol 2" }
+    - { regexp: '^#?X11Forwarding',          line: "X11Forwarding no" }
+    - { regexp: '^#?AllowAgentForwarding',   line: "AllowAgentForwarding no" }
+  notify: restart sshd
+
+- name: Set SSH file permissions
+  file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0600'

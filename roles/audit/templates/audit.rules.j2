@@ -1,0 +1,23 @@
+# CIS Audit Rules
+-D
+-b 8192
+-f 1
+
+# Monitor sudoers
+-w /etc/sudoers -p wa -k sudoers_changes
+-w /etc/sudoers.d -p wa -k sudoers_changes
+
+# Monitor passwd/shadow
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/group -p wa -k identity
+
+# Monitor SSH config
+-w /etc/ssh/sshd_config -p wa -k ssh_config
+
+# Monitor cron
+-w /etc/cron.d -p wa -k cron
+-w /etc/crontab -p wa -k cron
+
+# Audit privilege escalation
+-a always,exit -F arch=b64 -S setuid -S setgid -k privilege_escalation

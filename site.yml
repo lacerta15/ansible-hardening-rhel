@@ -1,0 +1,12 @@
+---
+- name: RHEL Security Hardening
+  hosts: all
+  become: true
+  vars_files:
+    - vars/hardening.yml
+  roles:
+    - role: os-baseline
+    - role: ssh-hardening
+    - role: firewall
+    - role: audit
+    - role: pam-security
